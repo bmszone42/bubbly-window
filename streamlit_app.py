@@ -40,10 +40,10 @@ def business_plots(df):
 
     # Revenue vs. Cost
     plt.figure(figsize=(10, 6))
-    sns.barplot(data=df, x=df.index, y='Revenue', color='blue', label='Revenue')
+    sns.barplot(data=df, x=df.index, y='Revenue', color='green', label='Revenue')
     sns.barplot(data=df, x=df.index, y='Total Cost', color='red', label='Cost')
     plt.title('Revenue vs. Cost')
-    plt.legend()
+    plt.legend(labels=['Revenue', 'Cost'])
     plt.show()
 
     # Net Profit Distribution
