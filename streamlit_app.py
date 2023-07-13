@@ -65,7 +65,7 @@ def business_plots(df):
     plt.show()
 
 # Perform the simulations
-@st.cache
+@st.cache_data
 def simulate(num_simulations, sales_volume, sales_price, operating_expenses, tax_rate, discount_rate, overhead_range, cots_chips_range, custom_chips_range, custom_chips_nre_range, custom_chips_licensing_range, ebrick_chiplets_range, ebrick_chiplets_licensing_range, osat_range, vv_tests_range, profit_margin_range):
     simulation_data = []  # Create an empty list to store simulation data
     for _ in range(num_simulations):
@@ -159,8 +159,8 @@ if run_simulation:
 
     # Identify the profit margin needed to keep the average total cost below $5M
     st.subheader('Profit Margin Needed')
-    profit_margin_needed = round(df[df['Total Cost'] < 5000000]['Profit'].mean() / df[df['Total Cost'] < 5000000].drop(columns='Profit').sum(axis=1).mean(), 2)
-    st.write(f'Profit margin needed to keep the average total cost below $5M: {profit_margin_needed * 100}%')   
+    profit_margin_needed = round(df[df['Total Cost'] < 5000000]['Profit'].mean() / df[df['Total Cost'] < 15000000].drop(columns='Profit').sum(axis=1).mean(), 2)
+    st.write(f'Profit margin needed to keep the average total cost below $15M: {profit_margin_needed * 100}%')   
 
     # Create and display business plots
     business_plots(df)
