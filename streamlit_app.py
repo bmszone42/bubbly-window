@@ -91,11 +91,14 @@ def simulate(num_simulations, sales_volume, sales_price, operating_expenses, tax
         taxes = net_profit_before_taxes * tax_rate / 100
         net_profit = net_profit_before_taxes - taxes
         npv = net_profit / (1 + discount_rate / 100)
-
+        
+        # Calculate Cash Flow
+        cash_flow = revenue - total_cost  # replace this with your actual cash flow calculation
+        
         # Calculate Profit Margin and ROI
         profit_margin = net_profit / revenue if revenue != 0 else 0
         roi = (net_profit - total_cost) / total_cost if total_cost != 0 else 0
-
+        
         simulation_data.append({
             'Overhead': overhead,
             'COTS Chips': cots_chips,
@@ -114,9 +117,11 @@ def simulate(num_simulations, sales_volume, sales_price, operating_expenses, tax
             'Taxes': taxes,
             'Net Profit': net_profit,
             'NPV': npv,
+            'Cash Flow': cash_flow,
             'Profit Margin': profit_margin,
             'ROI': roi
         })
+
 
     df = pd.DataFrame(simulation_data)
     return df
