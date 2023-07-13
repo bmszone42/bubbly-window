@@ -3,6 +3,8 @@ import pandas as pd
 import numpy as np
 import plotly.express as px
 import base64
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # Function to format numbers as millions
 def format_as_millions(num):
