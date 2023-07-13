@@ -97,23 +97,23 @@ def simulate(num_simulations, sales_volume, sales_price, operating_expenses, tax
         npv = net_profit / (1 + discount_rate / 100)
 
         simulation_data.append({
-            'Overhead': format_as_millions(overhead),
-            'COTS Chips': format_as_millions(cots_chips),
-            'Custom Chips': format_as_millions(custom_chips),
-            'Custom Chips NRE': format_as_millions(custom_chips_nre),
-            'Custom Chips Licensing': format_as_millions(custom_chips_licensing),
-            'eBrick Chiplets': format_as_millions(ebrick_chiplets),
-            'eBrick Chiplets Licensing': format_as_millions(ebrick_chiplets_licensing),
-            'OSAT': format_as_millions(osat),
-            'V&V Tests': format_as_millions(vv_tests),
-            'Profit': format_as_millions(profit),
-            'Total Cost': format_as_millions(total_cost),
-            'Revenue': format_as_millions(revenue),
-            'Gross Profit': format_as_millions(gross_profit),
-            'Net Profit Before Taxes': format_as_millions(net_profit_before_taxes),
-            'Taxes': format_as_millions(taxes),
-            'Net Profit': format_as_millions(net_profit),
-            'NPV': format_as_millions(npv)
+            'Overhead': overhead,
+            'COTS Chips': cots_chips,
+            'Custom Chips': custom_chips,
+            'Custom Chips NRE': custom_chips_nre,
+            'Custom Chips Licensing': custom_chips_licensing,
+            'eBrick Chiplets': ebrick_chiplets,
+            'eBrick Chiplets Licensing': ebrick_chiplets_licensing,
+            'OSAT': osat,
+            'V&V Tests': vv_tests,
+            'Profit': profit,
+            'Total Cost': total_cost,
+            'Revenue': revenue,
+            'Gross Profit': gross_profit,
+            'Net Profit Before Taxes': net_profit_before_taxes,
+            'Taxes': taxes,
+            'Net Profit': net_profit,
+            'NPV': npv
         })
 
     df = pd.DataFrame(simulation_data)
@@ -123,6 +123,13 @@ def simulate(num_simulations, sales_volume, sales_price, operating_expenses, tax
 if run_simulation:
     # Perform the simulations
     df = simulate(num_simulations, sales_volume, sales_price, operating_expenses, tax_rate, discount_rate, overhead_range, cots_chips_range, custom_chips_range, custom_chips_nre_range, custom_chips_licensing_range, ebrick_chiplets_range, ebrick_chiplets_licensing_range, osat_range, vv_tests_range, profit_margin_range)
+
+    # Calculate cost drivers here
+    cost_drivers = df.drop(columns=['Total Cost', 'Revenue', 'Gross Profit', 'Net Profit Before Taxes', 'Taxes', 'Net Profit', 'NPV']).mean().sort_values(ascending=False)
+
+    # Then format the numbers
+    for column in df.columns:
+        df[column] = df[column].apply(format_as_millions)
 
     # Create a DataFrame to display the ranges for each variable
     ranges_df = pd.DataFrame(index=['min', 'max'])
@@ -142,7 +149,6 @@ if run_simulation:
 
     # Identify the largest cost drivers
     st.subheader('Largest Cost Drivers')
-    cost_drivers = df.drop(columns=['Total Cost', 'Revenue', 'Gross Profit', 'Net Profit Before Taxes', 'Taxes', 'Net Profit', 'NPV']).mean().sort_values(ascending=False)
     st.write(cost_drivers)
 
     # Identify the ideal value range for each variable to bring the average total cost below $5M
