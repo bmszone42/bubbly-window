@@ -6,10 +6,6 @@ import base64
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Function to format numbers as millions
-def format_as_millions(num):
-    return f'{num / 1e6:.2f}M' if num > 1e4 else str(num)
-
 # Sidebar inputs
 num_simulations = st.sidebar.number_input('Number of Simulations', min_value=1000, max_value=100000, value=10000)
 num_bins = st.sidebar.number_input('Number of Bins', min_value=10, max_value=100, value=50)
@@ -67,7 +63,7 @@ def business_plots(df):
     sns.lineplot(data=df, x=df.index, y='Cash Flow')
     plt.title('Cash Flow Over Time')
     plt.show()
-    
+
 # Perform the simulations
 @st.cache
 def simulate(num_simulations, sales_volume, sales_price, operating_expenses, tax_rate, discount_rate, overhead_range, cots_chips_range, custom_chips_range, custom_chips_nre_range, custom_chips_licensing_range, ebrick_chiplets_range, ebrick_chiplets_licensing_range, osat_range, vv_tests_range, profit_margin_range):
@@ -127,15 +123,11 @@ if run_simulation:
     # Calculate cost drivers here
     cost_drivers = df.drop(columns=['Total Cost', 'Revenue', 'Gross Profit', 'Net Profit Before Taxes', 'Taxes', 'Net Profit', 'NPV']).mean().sort_values(ascending=False)
 
-    # Then format the numbers
-    for column in df.columns:
-        df[column] = df[column].apply(format_as_millions)
-
     # Create a DataFrame to display the ranges for each variable
     ranges_df = pd.DataFrame(index=['min', 'max'])
     for column in df.columns:
         ranges_df[column] = [df[column].min(), df[column].max()]
-    
+
     # Display the ranges DataFrame
     st.dataframe(ranges_df)
 
@@ -155,12 +147,12 @@ if run_simulation:
     st.subheader('Ideal Value Range for Each Variable')
     for column in df.columns:
         if column != 'Total Cost':
-            ideal_range = df[df['Total Cost'] < '5.00M'][column].agg(['min', 'max'])
+            ideal_range = df[df['Total Cost'] < 5000000][column].agg(['min', 'max'])
             st.write(f'{column}: {ideal_range[0]} - {ideal_range[1]}')
 
     # Identify the profit margin needed to keep the average total cost below $5M
     st.subheader('Profit Margin Needed')
-    profit_margin_needed = round(df[df['Total Cost'] < '5.00M']['Profit'].mean() / df[df['Total Cost'] < '5.00M'].drop(columns='Profit').sum(axis=1).mean(), 2)
+    profit_margin_needed = round(df[df['Total Cost'] < 5000000]['Profit'].mean() / df[df['Total Cost'] < 5000000].drop(columns='Profit').sum(axis=1).mean(), 2)
     st.write(f'Profit margin needed to keep the average total cost below $5M: {profit_margin_needed * 100}%')   
 
     # Create and display business plots
