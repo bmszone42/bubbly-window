@@ -92,6 +92,10 @@ def simulate(num_simulations, sales_volume, sales_price, operating_expenses, tax
         net_profit = net_profit_before_taxes - taxes
         npv = net_profit / (1 + discount_rate / 100)
 
+        # Calculate Profit Margin and ROI
+        profit_margin = net_profit / revenue if revenue != 0 else 0
+        roi = (net_profit - total_cost) / total_cost if total_cost != 0 else 0
+
         simulation_data.append({
             'Overhead': overhead,
             'COTS Chips': cots_chips,
@@ -109,17 +113,12 @@ def simulate(num_simulations, sales_volume, sales_price, operating_expenses, tax
             'Net Profit Before Taxes': net_profit_before_taxes,
             'Taxes': taxes,
             'Net Profit': net_profit,
-            'NPV': npv
+            'NPV': npv,
+            'Profit Margin': profit_margin,
+            'ROI': roi
         })
 
     df = pd.DataFrame(simulation_data)
-
-    # Add 'Profit Margin' and 'ROI' columns to the dataframe
-    df['Profit Margin'] = df['Profit'] / df['Total Cost'] * 100
-    df['ROI'] = df['Net Profit'] / df['Total Cost'] * 100
-    df['Cash Flow'] = df['Revenue'] - df['Total Cost']  # This is just an example. Adjust this calculation based on your specific requirements.
-
-
     return df
 
 # Check if the Run Simulation button is clicked
@@ -159,8 +158,8 @@ if run_simulation:
 
     # Identify the profit margin needed to keep the average total cost below $5M
     st.subheader('Profit Margin Needed')
-    profit_margin_needed = round(df[df['Total Cost'] < 5000000]['Profit'].mean() / df[df['Total Cost'] < 15000000].drop(columns='Profit').sum(axis=1).mean(), 2)
-    st.write(f'Profit margin needed to keep the average total cost below $15M: {profit_margin_needed * 100}%')   
+    profit_margin_needed = round(df[df['Total Cost'] < 5000000]['Profit'].mean() / df[df['Total Cost'] < 5000000].drop(columns='Profit').sum(axis=1).mean(), 2)
+    st.write(f'Profit margin needed to keep the average total cost below $5M: {profit_margin_needed * 100}%')   
 
     # Create and display business plots
     business_plots(df)
