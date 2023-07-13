@@ -117,6 +117,8 @@ def simulate(num_simulations, sales_volume, sales_price, operating_expenses, tax
     # Add 'Profit Margin' and 'ROI' columns to the dataframe
     df['Profit Margin'] = df['Profit'] / df['Total Cost'] * 100
     df['ROI'] = df['Net Profit'] / df['Total Cost'] * 100
+    df['Cash Flow'] = df['Revenue'] - df['Total Cost']  # This is just an example. Adjust this calculation based on your specific requirements.
+
 
     return df
 
