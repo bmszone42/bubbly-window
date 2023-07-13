@@ -113,6 +113,11 @@ def simulate(num_simulations, sales_volume, sales_price, operating_expenses, tax
         })
 
     df = pd.DataFrame(simulation_data)
+
+    # Add 'Profit Margin' and 'ROI' columns to the dataframe
+    df['Profit Margin'] = df['Profit'] / df['Total Cost'] * 100
+    df['ROI'] = df['Net Profit'] / df['Total Cost'] * 100
+
     return df
 
 # Check if the Run Simulation button is clicked
