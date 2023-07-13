@@ -33,6 +33,39 @@ discount_rate = st.sidebar.slider('Discount Rate (%)', min_value=0, max_value=50
 
 run_simulation = st.button('Run Simulation')
 
+def business_plots(df):
+    # Profit Margin Over Time
+    plt.figure(figsize=(10, 6))
+    sns.lineplot(data=df, x=df.index, y='Profit Margin')
+    plt.title('Profit Margin Over Time')
+    plt.show()
+
+    # Revenue vs. Cost
+    plt.figure(figsize=(10, 6))
+    sns.barplot(data=df, x=df.index, y='Revenue', color='blue', label='Revenue')
+    sns.barplot(data=df, x=df.index, y='Total Cost', color='red', label='Cost')
+    plt.title('Revenue vs. Cost')
+    plt.legend()
+    plt.show()
+
+    # Net Profit Distribution
+    plt.figure(figsize=(10, 6))
+    sns.histplot(data=df, x='Net Profit', bins=30, kde=True)
+    plt.title('Net Profit Distribution')
+    plt.show()
+
+    # Return on Investment (ROI)
+    plt.figure(figsize=(10, 6))
+    sns.lineplot(data=df, x=df.index, y='ROI')
+    plt.title('Return on Investment Over Time')
+    plt.show()
+
+    # Cash Flow
+    plt.figure(figsize=(10, 6))
+    sns.lineplot(data=df, x=df.index, y='Cash Flow')
+    plt.title('Cash Flow Over Time')
+    plt.show()
+    
 # Perform the simulations
 @st.cache
 def simulate(num_simulations, sales_volume, sales_price, operating_expenses, tax_rate, discount_rate, overhead_range, cots_chips_range, custom_chips_range, custom_chips_nre_range, custom_chips_licensing_range, ebrick_chiplets_range, ebrick_chiplets_licensing_range, osat_range, vv_tests_range, profit_margin_range):
@@ -121,6 +154,9 @@ if run_simulation:
     st.subheader('Profit Margin Needed')
     profit_margin_needed = round(df[df['Total Cost'] < '5.00M']['Profit'].mean() / df[df['Total Cost'] < '5.00M'].drop(columns='Profit').sum(axis=1).mean(), 2)
     st.write(f'Profit margin needed to keep the average total cost below $5M: {profit_margin_needed * 100}%')   
+
+    # Create and display business plots
+    business_plots(df)
 
 # Downloadable results
 if st.button('Download Results as CSV'):
